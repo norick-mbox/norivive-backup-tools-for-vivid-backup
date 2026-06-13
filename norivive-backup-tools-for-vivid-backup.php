@@ -3,7 +3,7 @@
  * Plugin Name: Norivive Backup Tools for Vivid Backup
  * Plugin URI: https://github.com/norick-mbox/norivive-backup-tools-for-vivid-backup
  * Description: Bulk download and upload manager for WPvivid Backup Plugin.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Requires Plugins: wpvivid-backuprestore
  * Author: Norick Saeki
  * Author URI: https://norick-mbox.com/
@@ -25,7 +25,7 @@
     /**
  * Plugin version.
  */
-    define('BBMWPV_VERSION', '1.0.1');
+    define('BBMWPV_VERSION', '1.0.2');
 
     /**
  * Plugin path.

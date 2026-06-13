@@ -14,10 +14,14 @@ class BBMWPV_Bulk_Download
      */
     public function init()
     {
-
         add_action(
             'wp_ajax_bbmwpv_bulk_download',
             array($this, 'handle_bulk_download')
+        );
+
+        add_action(
+            'wp_ajax_bbmwpv_download_bundle',
+            array($this, 'download_bundle')
         );
 
         add_action(
@@ -142,7 +146,10 @@ class BBMWPV_Bulk_Download
             );
         }
 
-        $site_url = home_url();
+        $site_url = set_url_scheme(
+            home_url(),
+            'https'
+        );
 
         /**
          * Remove protocol.
@@ -305,7 +312,10 @@ class BBMWPV_Bulk_Download
          */
         $download_url =
         trailingslashit(
-            $upload_dir['baseurl']
+            set_url_scheme(
+                $upload_dir['baseurl'],
+                'https'
+            )
         ) .
         'bbmwpv-downloads/' .
         rawurlencode(
@@ -321,14 +331,27 @@ class BBMWPV_Bulk_Download
             array($zip_path)
         );
 
+        $fallback_url = wp_nonce_url(
+            admin_url(
+                'admin-ajax.php?action=bbmwpv_download_bundle&file=' .
+                rawurlencode($zip_filename)
+            ),
+            'bbmwpv_download_bundle'
+        );
+
         wp_send_json_success(
             array(
                 'message' =>
                 'ZIP bundle created.',
+
                 'url' =>
                 $download_url,
+
+                'fallback_url' =>
+                $fallback_url,
             )
         );
+
     }
 
     /**
@@ -350,6 +373,62 @@ class BBMWPV_Bulk_Download
         }
 
         wp_delete_file($zip_path);
+    }
+
+    /**
+     * Download generated ZIP bundle.
+     *
+     * @return void
+     */
+    public function download_bundle()
+    {
+        if (!current_user_can('manage_options')) {
+            wp_die('Permission denied');
+        }
+
+        check_admin_referer(
+            'bbmwpv_download_bundle'
+        );
+
+        $filename = isset($_GET['file'])
+        ? sanitize_file_name(
+            wp_unslash($_GET['file'])
+        )
+        : '';
+
+        if (empty($filename)) {
+            wp_die('Invalid file');
+        }
+
+        $upload_dir = wp_upload_dir();
+
+        $file =
+            trailingslashit(
+            $upload_dir['basedir']
+        ) .
+            'bbmwpv-downloads/' .
+            $filename;
+
+        if (!file_exists($file)) {
+            wp_die('File not found');
+        }
+
+        nocache_headers();
+
+        header('Content-Type: application/zip');
+        header(
+            'Content-Disposition: attachment; filename="' .
+            basename($file) .
+            '"'
+        );
+        header(
+            'Content-Length: ' .
+            filesize($file)
+        );
+
+        readfile($file);
+
+        exit;
     }
 
     /**

@@ -4,7 +4,7 @@ Tags: backup, wpvivid, migration, restore, download
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 Required plugin: WPvivid Backup Plugin
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -143,6 +143,19 @@ The file is generated temporarily and removed immediately after streaming.
 ファイルは一時生成され、ストリーミング後に即時削除されます。
 
 == Changelog ==
+= 1.0.2 =
+
+* Fixed download issues on some environments with mixed HTTP/HTTPS configurations.
+* Added a fallback download method via admin-ajax.php when direct ZIP download fails.
+* Improved download URL handling for HTTPS environments.
+* Improved download reliability on servers with SSL configuration inconsistencies.
+
+
+* 一部のHTTP/HTTPS混在環境で発生するダウンロードエラーを修正しました。
+* ZIPファイルの直接ダウンロードに失敗した場合の救済として、admin-ajax.php経由のダウンロード機能を追加しました。
+* HTTPS環境におけるダウンロードURLの処理を改善しました。
+* SSL設定に不整合があるサーバー環境でのダウンロード安定性を向上しました。
+
 
 = 1.0.1 =
 
@@ -150,6 +163,15 @@ The file is generated temporarily and removed immediately after streaming.
   初回リリース
 
 == Upgrade Notice ==
+= 1.0.2 =
+
+* Fixed download issues on some hosting environments.
+* Added a fallback download method for improved compatibility.
+* Improved HTTPS download handling.
+* 一部サーバー環境で発生するダウンロードエラーを修正しました。
+* 互換性向上のためフォールバックダウンロード機能を追加しました。
+* HTTPS環境でのダウンロード処理を改善しました。
+
 
 = 1.0.1 =
 

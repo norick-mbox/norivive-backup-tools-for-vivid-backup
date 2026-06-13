@@ -157,7 +157,13 @@ jQuery(function ($) {
           '<div id="bbmwpv-manual-download" style="display:none;">' +
 
           '<a href="' +
-          response.data.url +
+
+          (
+            response.data.fallback_url
+              ? response.data.fallback_url
+              : response.data.url
+          ) +
+
           '" class="button button-primary" ' +
           'target="_blank">' +
 
@@ -173,8 +179,16 @@ jQuery(function ($) {
          */
         setTimeout(function () {
 
-          window.location.href =
-            response.data.url;
+          let url = response.data.url;
+
+          try {
+            url = url.replace(
+              /^http:/i,
+              'https:'
+            );
+          } catch (e) { }
+
+          window.location.href = url;
 
         }, 2000);
 
